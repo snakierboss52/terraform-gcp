@@ -8,24 +8,24 @@ resource "google_compute_instance" "compute-engine-test" {
   machine_type = var.machine_type
   //region       = var.region
   zone         = var.zone
-  desired_status  = "RUNNING"
+  desired_status  = var.desired-status
 
 
-  tags = ["test-jenkins"]
+  tags = [var.tags]
 
   boot_disk {
     initialize_params {
-      type  = "pd-balanced"
-      size  = "10"
-      image = "ubuntu-1804-bionic-v20220712"
+      type  = var.type-boot-disk
+      size  = var.size-boot-disk
+      image = var.image
     }
   }
 
   network_interface {
-    network = "default"
+    network = var.network
 
     access_config {
-      network_tier = "PREMIUM"
+      network_tier = var.network-tier
     }
 
     stack_type =  "IPV4_ONLY"
@@ -33,9 +33,9 @@ resource "google_compute_instance" "compute-engine-test" {
 
 
    service_account {
-    email  = "terraform-user@civic-matrix-356905.iam.gserviceaccount.com"
+    email  = var.email
     scopes = [
-        "https://www.googleapis.com/auth/cloud-platform"
+        var.scopes
     ]
   }
 
@@ -43,12 +43,12 @@ resource "google_compute_instance" "compute-engine-test" {
 
 resource "google_compute_disk" "default" {
   name  = "test-disk"
-  type  = "pd-balanced"
-  size  = "15"
+  type  = var.type-boot-disk
+  size  = var.size-boot-disk
   zone  = var.zone
-  image = "ubuntu-1804-bionic-v20220712"
+  image = var.image
   labels = {
-    environment = "dev"
+    environment = var.environment
   }
   physical_block_size_bytes = 4096
 }
